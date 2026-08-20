@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
 
 public class JanelaEstudante extends JFrame {
 
@@ -36,7 +37,15 @@ public class JanelaEstudante extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setBounds(27, 11, 46, 14);
+		contentPane.add(lblNome);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setBounds(27, 36, 46, 14);
+		contentPane.add(lblNewLabel);
 
 	}
-
 }
