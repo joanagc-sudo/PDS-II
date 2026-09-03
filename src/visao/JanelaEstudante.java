@@ -69,10 +69,20 @@ public class JanelaEstudante extends JFrame {
 		txtNome.setColumns(10);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cadastrar();
+			}
+		});
 		btnCadastrar.setBackground(new Color(240, 240, 240));
 		contentPane.add(btnCadastrar, "cell 2 0,growx");
 		
 		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limpar();
+			}
+		});
 		contentPane.add(btnLimpar, "cell 3 0,growx");
 		
 		JLabel lblCurso = new JLabel("Curso:");
@@ -153,7 +163,61 @@ public class JanelaEstudante extends JFrame {
 		 lblStatus.setText(lista.size() + " estudante(s) na tabela.");
 		 }
 
-	
+		private Estudante lerFormulario() {
+			 String nome = txtNome.getText().trim();
+			 String curso = txtCurso.getText().trim();
+			if (nome.isEmpty()) {
+			 JOptionPane.showMessageDialog(this, "Preencha o nome!",
+			"Aviso", JOptionPane.WARNING_MESSAGE);
+			 txtNome.requestFocus();
+			return null;
+			 }
+			double nota;
+			try {
+			 nota = Double.parseDouble(txtNota.getText().trim().replace(",", "."));
+			 } catch (NumberFormatException ex) {
+			 JOptionPane.showMessageDialog(this, "Nota deve ser um numero!",
+			"Aviso", JOptionPane.WARNING_MESSAGE);
+			 txtNota.requestFocus();
+			return null;
+			 }
+			if (nota < 0 || nota > 10) {
+			 JOptionPane.showMessageDialog(this, "A nota deve estar entre 0 e 10.",
+			"Aviso", JOptionPane.WARNING_MESSAGE);
+			 txtNota.requestFocus();
+			return null;
+			 }
+			return new Estudante(nome, curso, nota);
+			 }
+			private void cadastrar() {
+			 Estudante e = lerFormulario();
+			if (e == null) return; // invalido: a mensagem ja apareceu
+			try {
+			 dao.inserir(e);
+			 JOptionPane.showMessageDialog(this,
+			"Estudante cadastrado com o id " + e.getId() + ".");
+			 limpar();
+			 listar();
+			 } catch (SQLException ex) {
+			 erro("Erro ao cadastrar", ex);
+			 }
+			 }
+			private void limpar() {
+			 idSelecionado = 0;
+			 txtNome.setText("");
+			 txtCurso.setText("");
+			 txtNota.setText("");
+			 tabela.clearSelection();
+			 txtNome.requestFocus();
+			 lblStatus.setText("Formulario limpo.");
+			 }
+			private void erro(String contexto, SQLException ex) {
+			 JOptionPane.showMessageDialog(this,
+			 contexto + ": " + ex.getMessage(),
+			"Erro", JOptionPane.ERROR_MESSAGE);
+			 lblStatus.setText(contexto + ".");
+			 }
+
 	public JTextField getTxtNome() {
 		return txtNome;
 	}
